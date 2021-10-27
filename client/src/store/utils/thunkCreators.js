@@ -40,7 +40,9 @@ export const register = (credentials) => async (dispatch) => {
         socket.emit("go-online", data.id);
     } catch (error) {
         console.error(error);
-        dispatch(gotUser({ error: error.response.data.error || "Server Error" }));
+        dispatch(
+            gotUser({ error: error.response.data.error || "Server Error" })
+        );
     }
 };
 
@@ -52,7 +54,9 @@ export const login = (credentials) => async (dispatch) => {
         socket.emit("go-online", data.id);
     } catch (error) {
         console.error(error);
-        dispatch(gotUser({ error: error.response.data.error || "Server Error" }));
+        dispatch(
+            gotUser({ error: error.response.data.error || "Server Error" })
+        );
     }
 };
 
@@ -73,7 +77,11 @@ export const fetchConversations = () => async (dispatch) => {
     try {
         const { data } = await axios.get("/api/conversations");
         // sort the messages correctly
-        data.forEach(conversation => conversation.messages.sort((a, b) => a.id - b.id))
+        data.forEach((conversation) =>
+            conversation.messages.sort(
+                (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+            )
+        );
 
         dispatch(gotConversations(data));
     } catch (error) {
