@@ -57,13 +57,13 @@ const SenderBubble = (props) => {
     <Box className={classes.root}>
       <Typography
         className={`${classes.date} ${
-          images && images.length > 1 ? classes.last : ""
+          images && images.length > 1 && text ? classes.last : ""
         }`}
       >
         {time}
       </Typography>
       {text && (
-        <Box className={classes.bubble}>
+        <Box className={`${classes.bubble} ${images && images.length === 1 ? classes.last : ""}`}>
           <Typography className={classes.text}>{text}</Typography>
         </Box>
       )}
