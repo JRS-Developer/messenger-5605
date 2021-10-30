@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { FormControl, FilledInput, Box } from "@material-ui/core";
+import { FormControl, FilledInput, IconButton } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { postMessage } from "../../store/utils/thunkCreators";
 import { AddPhotoAlternateOutlined } from "@material-ui/icons";
+import ImagesContainer from "./ImagesContainer";
 
 const cloudinaryURI = "https://api.cloudinary.com/v1_1/jrscloud/upload";
 
@@ -57,31 +58,39 @@ const Input = (props) => {
     if (newImages) {
       setImages((old) => [...old, ...newImages]);
     }
+    // Clean the value to can upload more files
+    event.target.value = "";
   };
+
+  const removeImage = (id) =>
+    setImages((old) => old.filter((img) => img.asset_id !== id));
 
   const resetImages = () => setImages([]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     // add sender user info if posting to a brand new convo, so that the other user will have access to username, profile pic, etc.
-    const reqBody = {
-      text: event.target.text.value,
-      recipientId: otherUser.id,
-      conversationId,
-      sender: conversationId ? null : user,
-      attachments: images,
-    };
-    await postMessage(reqBody);
-    setText("");
+    if (text || images.length > 0) {
+      const reqBody = {
+        text,
+        recipientId: otherUser.id,
+        conversationId,
+        sender: conversationId ? null : user,
+        attachments: images.map((image) => image.url),
+      };
+      await postMessage(reqBody);
+      setText("");
+      resetImages();
+    }
   };
 
   return (
     <div>
-      <Box>
-        {images.map((image) => (
-          <img src={image.url} key={image.asset_id} />
-        ))}
-      </Box>
+      <ImagesContainer
+        images={images}
+        reseter={resetImages}
+        deleter={removeImage}
+      />
       <form className={classes.root} onSubmit={handleSubmit}>
         <FormControl fullWidth hiddenLabel>
           <FilledInput
@@ -93,9 +102,11 @@ const Input = (props) => {
             onChange={handleChange}
             endAdornment={
               <>
-                <label htmlFor="image-upload">
-                  <AddPhotoAlternateOutlined color="secondary" />
-                </label>
+                <IconButton>
+                  <label htmlFor="image-upload">
+                    <AddPhotoAlternateOutlined color="secondary" />
+                  </label>
+                </IconButton>
                 <input
                   multiple
                   accept="image/*"
