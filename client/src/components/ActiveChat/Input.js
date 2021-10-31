@@ -19,6 +19,11 @@ const useStyles = makeStyles(() => ({
     borderRadius: 8,
     marginBottom: 20,
   },
+  label: {
+    "&:hover": {
+      cursor: "pointer",
+    },
+  },
 }));
 
 const Input = (props) => {
@@ -103,7 +108,7 @@ const Input = (props) => {
             endAdornment={
               <>
                 <IconButton>
-                  <label htmlFor="image-upload">
+                  <label htmlFor="image-upload" className={classes.label}>
                     <AddPhotoAlternateOutlined color="secondary" />
                   </label>
                 </IconButton>
