@@ -15,8 +15,8 @@ const useStyles = makeStyles(() => ({
     fontWeight: "bold",
     marginBottom: 5,
   },
-  last:{
-    order: 2
+  last: {
+    order: 2,
   },
   text: {
     fontSize: 14,
@@ -29,56 +29,47 @@ const useStyles = makeStyles(() => ({
     background: "#F4F6FA",
     borderRadius: "10px 10px 0 10px",
   },
-  imagesBox: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: 10,
+  image: {
+    width: ({ images }) => (images && images.length > 1 ? "6rem" : "9rem"),
+    maxHeight: ({ images }) => (images && images.length > 1 ? "6rem" : "9rem"),
+    borderRadius: "10px 10px 10px 10px",
+    objectFit: "cover",
   },
-  imageOne: {
-    width: "9rem",
-    maxHeight: "9rem",
-    borderRadius: '10px 10px 0 10px',
-    objectFit: 'cover',
-  },
-  imageMany: {
-    width: "6rem",
-    height: "6rem",
-    borderRadius: '10px 10px 0 10px',
-    objectFit: 'cover',
-    maxHeight: 100
-  },
+  imagesBox: ({ images }) =>
+    images && images.lenth > 0
+      ? {
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr",
+        gap: 10,
+      }
+      : {},
 }));
 
 const SenderBubble = (props) => {
-  const classes = useStyles();
   const { time, text, images } = props;
+
+  const classes = useStyles({ images });
 
   return (
     <Box className={classes.root}>
       <Typography
-        className={`${classes.date} ${
-          images && images.length > 1 && text ? classes.last : ""
-        }`}
+        className={`${classes.date} ${images && images.length > 1 && text ? classes.last : ""
+          }`}
       >
         {time}
       </Typography>
       {text && (
-        <Box className={`${classes.bubble} ${images && images.length === 1 ? classes.last : ""}`}>
+        <Box
+          className={`${classes.bubble} ${images && images.length === 1 ? classes.last : ""
+            }`}
+        >
           <Typography className={classes.text}>{text}</Typography>
         </Box>
       )}
-      <Box
-        className={`${images && images.length > 1 ? classes.imagesBox : ""}`}
-      >
+      <Box className={classes.imagesBox}>
         {images &&
           images.map((image) => (
-            <img
-              className={`${
-                images.length > 1 ? classes.imageMany : classes.imageOne
-              }`}
-              src={image}
-              alt=""
-            />
+            <img className={classes.image} src={image} alt="user sent-media" />
           ))}
       </Box>
     </Box>

@@ -30,28 +30,25 @@ const useStyles = makeStyles(() => ({
     letterSpacing: -0.2,
     padding: 8,
   },
-  imageOne: {
-    width: "9rem",
-    maxHeight: "9rem",
+  image: {
+    width: ({ images }) => (images && images.length > 0 ? "9rem" : "6rem"),
+    maxHeight: ({ images }) => (images && images.length > 0 ? "9rem" : "6rem"),
     borderRadius: "10px 10px 10px 10px",
-    objectFit: 'cover',
+    objectFit: "cover",
   },
-  imageMany: {
-    width: "6rem",
-    height: "6rem",
-    borderRadius: "10px 10px 10px 10px",
-    objectFit: 'cover',
-  },
-  imagesBox: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: 10,
-  },
+  imagesBox: ({ images }) =>
+    images && images.lenth > 0
+      ? {
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: 10,
+        }
+      : {},
 }));
 
 const OtherUserBubble = (props) => {
-  const classes = useStyles();
   const { text, time, otherUser, images } = props;
+  const classes = useStyles({ images });
   return (
     <Box className={classes.root}>
       <Avatar
@@ -68,17 +65,13 @@ const OtherUserBubble = (props) => {
             <Typography className={classes.text}>{text}</Typography>
           </Box>
         )}
-        <Box
-          className={`${images && images.length > 1 ? classes.imagesBox : ""}`}
-        >
+        <Box className={classes.imageBox}>
           {images &&
             images.map((image) => (
               <img
-                className={`${
-                  images.length > 1 ? classes.imageMany : classes.imageOne
-                }`}
+                className={classes.image}
                 src={image}
-                alt=""
+                alt="user sent-media"
               />
             ))}
         </Box>
