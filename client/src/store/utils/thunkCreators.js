@@ -8,7 +8,7 @@ import {
 } from "../conversations";
 import { gotUser, setFetchingStatus } from "../user";
 
-axios.interceptors.request.use(async function(config) {
+axios.interceptors.request.use(async function (config) {
     const token = await localStorage.getItem("messenger-token");
     config.headers["x-access-token"] = token;
 
@@ -126,5 +126,27 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
         dispatch(setSearchedUsers(data));
     } catch (error) {
         console.error(error);
+    }
+};
+
+export const saveImage = async (file) => {
+    try {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append(
+            "upload_preset",
+            process.env.REACT_APP_CLOUDINARY_PRESET
+        );
+        const response = await fetch(
+            `${process.env.REACT_APP_CLOUDINARY_URI}upload`,
+            {
+                method: "POST",
+                body: formData,
+            }
+        );
+        const data = await response.json();
+        return data;
+    } catch (e) {
+        console.error(e);
     }
 };
