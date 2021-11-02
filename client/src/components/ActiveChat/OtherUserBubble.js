@@ -31,13 +31,13 @@ const useStyles = makeStyles(() => ({
     padding: 8,
   },
   image: {
-    width: ({ images }) => (images && images.length > 0 ? "9rem" : "6rem"),
-    maxHeight: ({ images }) => (images && images.length > 0 ? "9rem" : "6rem"),
+    width: ({ images }) => (images?.length > 0 ? "9rem" : "6rem"),
+    maxHeight: ({ images }) => (images?.length > 0 ? "9rem" : "6rem"),
     borderRadius: "10px 10px 10px 10px",
     objectFit: "cover",
   },
   imagesBox: ({ images }) =>
-    images && images.lenth > 0
+    images?.length > 0
       ? {
           display: "grid",
           gridTemplateColumns: "1fr 1fr",
@@ -71,7 +71,7 @@ const OtherUserBubble = (props) => {
               <img
                 className={classes.image}
                 src={image}
-                alt="user sent-media"
+                alt="user-sent media"
               />
             ))}
         </Box>
