@@ -5,14 +5,20 @@ import {
   Grid,
   Box,
   Typography,
-  Button,
   FormControl,
   TextField,
 } from "@material-ui/core";
 import { login } from "./store/utils/thunkCreators";
+import useAuthStyles from "./components/Auth/useAuthStyles.js";
+import SideImg from "./components/Auth/SideImg";
+import SubmitButton from "./components/Auth/SubmitButton";
+import FormTitle from "./components/Auth/FormTitle";
+import FormHeader from "./components/Auth/FormHeader";
 
 const Login = (props) => {
   const history = useHistory();
+  const classes = useAuthStyles();
+
   const { user, login } = props;
 
   const handleLogin = async (event) => {
@@ -28,39 +34,49 @@ const Login = (props) => {
   }
 
   return (
-    <Grid container justify="center">
-      <Box>
-        <Grid container item>
-          <Typography>Need to register?</Typography>
-          <Button onClick={() => history.push("/register")}>Register</Button>
-        </Grid>
-        <form onSubmit={handleLogin}>
-          <Grid>
-            <Grid>
-              <FormControl margin="normal" required>
-                <TextField
-                  aria-label="username"
-                  label="Username"
-                  name="username"
-                  type="text"
-                />
-              </FormControl>
-            </Grid>
+    <Grid className={classes.root}>
+      <SideImg classes={classes} />
+      <Box className={classes.sideForm}>
+        <FormHeader
+          classes={classes}
+          text="Don’t have an account?"
+          buttonText="Create account"
+          clickHandler={() => history.push("/register")}
+        />
+        <Box className={classes.formContainer}>
+          <FormTitle classes={classes}>Welcome Back!</FormTitle>
+          <form onSubmit={handleLogin} className={classes.form}>
             <FormControl margin="normal" required>
               <TextField
-                label="password"
+                aria-label="username"
+                label="Username"
+                name="username"
+                type="text"
+              />
+            </FormControl>
+            <FormControl margin="normal" required>
+              <TextField
+                label="Password"
                 aria-label="password"
                 type="password"
                 name="password"
+                InputProps={{
+                  endAdornment: (
+                    <Typography
+                      color="primary"
+                      className={`${classes.bold} ${classes.smallText}`}
+                    >
+                      Forgot?
+                    </Typography>
+                  ),
+                }}
               />
             </FormControl>
-            <Grid>
-              <Button type="submit" variant="contained" size="large">
-                Login
-              </Button>
+            <Grid justifyContent="center" container>
+              <SubmitButton classes={classes}>Login</SubmitButton>
             </Grid>
-          </Grid>
-        </form>
+          </form>
+        </Box>
       </Box>
     </Grid>
   );
